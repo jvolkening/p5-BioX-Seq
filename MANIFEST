@@ -1,0 +1,12 @@
+Changes
+lib/BioX/Seq.pm
+lib/BioX/Seq/Stream.pm
+lib/BioX/Seq/Stream.pm
+lib/BioX/Seq/Stream/FASTA.pm
+lib/BioX/Seq/Stream/FASTQ.pm
+lib/BioX/Seq/Stream/TwoBit.pm
+lib/BioX/Seq/Fetch.pm
+lib/BioX/Seq/Utils.pm
+Makefile.PL
+MANIFEST			This list of files
+README.md

@@ -1,0 +1,78 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use BioX::Seq::Stream;
+use Getopt::Long;
+
+my $mode = 0;
+my %callbacks = (
+    0 => \&checkval_file_size,
+);
+
+GetOptions(
+    'mode=i' => \$mode,
+) or die "failed to read parameters: $!\n";
+
+die "Invalid check mode $mode\n" if (! defined $callbacks{$mode});
+
+my $fn = $ARGV[0];
+
+die "Missing or invalid filename\n"
+    if (! -e $fn);
+
+my $p = BioX::Seq::Stream->new($fn);
+
+open my $out, '>', "$fn.bidx";
+binmode($out);
+
+safe_write( $out => 'bidx' );
+&{ $callbacks{$mode} };
+
+my $curr_start = 0;
+my $curr_end   = -1;
+my $curr_id;
+open my $in, '<', $fn;
+while (my $line = <$in>) {
+    if ($line =~ /^>(\S*)/) {
+        my $id = $1;
+        die "Empty identifier" if (length($id) < 1);
+        die "Identifier too long (max length 256)"
+            if (length($id) > 256);
+        if (defined $curr_id) {
+            safe_write( $out => pack('C', length($curr_id)-1) );
+            safe_write( $out => $curr_id );
+            safe_write( $out => pack('Q<', $curr_start) );
+            safe_write( $out => pack('V', $curr_end - $curr_start + 1) );
+            warn "$curr_id\t$curr_start\t$curr_end\n";
+        }
+        $curr_id = $id;
+        $curr_start = $curr_end + 1;
+    }
+    $curr_end = tell($in) - 1;
+}
+safe_write( $out => pack('C', length($curr_id)-1) );
+safe_write( $out => $curr_id );
+safe_write( $out => pack('Q<', $curr_start) );
+safe_write( $out => pack('V', $curr_end - $curr_start) );
+warn "$curr_id\t$curr_start\t$curr_end\n";
+
+exit;
+
+sub checkval_file_size {
+
+    safe_write( $out => pack('C', 0) );
+    safe_write( $out => pack('Q<', -s $fn) );
+    safe_write( $out => pack('Q<', 0) );
+
+}
+
+sub safe_write {
+
+    my ($fh, $str) = @_;
+
+    my $r = syswrite($fh, $str);
+    die "Bytes written mismatch" if ($r != length($str));
+
+}
