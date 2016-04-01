@@ -17,6 +17,7 @@ WriteMakefile(
         'Test::More' => 0,
     },
     PREREQ_PM => {
+        'Compress::BGZF' => 0,
     },
     EXE_FILES => [qw|
     |],
