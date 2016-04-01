@@ -1,7 +1,6 @@
 package BioX::Seq::Fetch;
 
-use 5.010001;
-
+use 5.012;
 use strict;
 use warnings;
 

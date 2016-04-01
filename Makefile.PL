@@ -1,3 +1,5 @@
+use 5.012;
+
 use strict;
 use warnings;
 
@@ -10,6 +12,7 @@ WriteMakefile(
     ABSTRACT_FROM       => 'lib/BioX/Seq.pm',
     LICENSE             => 'GPL_3',
     PL_FILES            => {},
+    MIN_PERL_VERSION => 5.012,
     CONFIGURE_REQUIRES => {
         'ExtUtils::MakeMaker' => 0,
     },

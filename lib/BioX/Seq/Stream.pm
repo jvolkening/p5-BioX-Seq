@@ -1,7 +1,6 @@
 package BioX::Seq::Stream;
 
-use v5.10.1;
-
+use 5.012;
 use strict;
 use warnings;
 

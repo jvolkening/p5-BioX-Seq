@@ -1,5 +1,6 @@
 package BioX::Seq 0.02;
 
+use 5.012;
 use strict;
 use warnings;
 
