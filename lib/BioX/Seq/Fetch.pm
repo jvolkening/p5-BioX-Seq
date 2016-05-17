@@ -70,6 +70,20 @@ sub _load_faidx {
 
 }
 
+sub ids {
+
+    my ($self) = @_;
+    return keys %{ $self->{idx} };
+
+}
+
+sub length {
+
+    my ($self, $id) = @_;
+    return $self->{idx}->{$id}->[0];
+
+}
+
 sub fetch_seq {
     
     my ($self, $id, $start_bp, $end_bp) = @_;
