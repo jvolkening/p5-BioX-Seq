@@ -74,7 +74,7 @@ sub all_orfs {
 sub is_nucleic {
 
     my ($seq) = @_;
-    return $seq !~ /[^ACGTUMRWSYKVHDBN]/i;
+    return $seq !~ /[^ACGTUMRWSYKVHDBN.-]/i;
 }
 
 sub rev_com {
