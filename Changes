@@ -1,5 +1,8 @@
 Revision history for BioX-Seq
 
-0.01    2016-03-31
+0.004   2016-11-18
+        Fixed handling of cross-platform line endings
+
+0.001   2016-03-31
         Initial release
 

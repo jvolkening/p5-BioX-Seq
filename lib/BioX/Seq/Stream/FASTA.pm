@@ -20,6 +20,18 @@ sub _init {
     my $fh = $self->{fh};
     $self->{buffer} .= <$fh>;
 
+    # detect line endings for text files based on first line
+    # (other solutions, such as using the :crlf layer or s///
+    # instead of chomp may be marginally more robust but slow
+    # things down too much)
+    if ($self->{buffer} =~ /([\r\n]{1,2})$/) {
+        $self->{rec_sep} = $1;
+    }
+    else {
+        die "Failed to detect line endings\n";
+    }
+    local $/ = $self->{rec_sep};
+
     # Parse initial header line
     chomp $self->{buffer};
     if ($self->{buffer} =~ /^>(\S+)\s*(.+)?$/) {
@@ -43,13 +55,14 @@ sub next_seq {
     my $id   = $self->{next_id};
     my $desc = $self->{next_desc};
     my $seq = '';
+
+    local $/ = $self->{rec_sep};
     
     my $line = <$fh>;
 
     while ($line) {
 
         chomp $line;
-        #$line =~ s/\R$//;
 
         # match next record header
         if ($line =~ /^>(\S+)\s*(.+)?$/) {

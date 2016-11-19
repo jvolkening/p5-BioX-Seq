@@ -101,15 +101,6 @@ sub new {
 
     $self->_guess_format;
 
-    # detect line endings for text files based on first line
-    # (other solutions, such as using the :crlf layer or s///
-    # instead of chomp may be marginally more robust but slow
-    # things down too much)
-
-    if ($self->{buffer} =~ /([\r\n]{1,2})$/) {
-        $/ = $1;
-    }
-
     $self->_init;
 
     return $self;

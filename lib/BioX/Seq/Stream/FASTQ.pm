@@ -20,6 +20,17 @@ sub _init {
     my $fh = $self->{fh};
     $self->{buffer} .= <$fh>;
 
+    # detect line endings for text files based on first line
+    # (other solutions, such as using the :crlf layer or s///
+    # instead of chomp may be marginally more robust but slow
+    # things down too much)
+    if ($self->{buffer} =~ /([\r\n]{1,2})$/) {
+        $self->{rec_sep} = $1;
+    }
+    else {
+        die "Failed to detect line endings\n";
+    }
+
     return;
     
 }
@@ -28,6 +39,8 @@ sub next_seq {
     
     my ($self) = @_;
     my $fh = $self->{fh};
+
+    local $/ = $self->{rec_sep};
 
     my $line = $self->{buffer} // <$fh>;
     return undef if (! defined $line);
