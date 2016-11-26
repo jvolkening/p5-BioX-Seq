@@ -50,8 +50,8 @@ sub _load_faidx {
     my ($self) = @_;
 
     my $fn_idx  = $self->{fn} . '.fai';
-    die "ERROR: No index file found. Perhaps you need to create an"
-        . " index (e.g. by 'samtools faidx')\n"
+    die "ERROR: No index file found (expected $fn_idx). Perhaps you need to"
+        . " create an index (e.g. by 'samtools faidx')\n"
         if (! -e $fn_idx);
 
     open my $in, '<', $fn_idx;
