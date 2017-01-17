@@ -210,8 +210,8 @@ sub rev_com {
     }
     $seq = reverse $seq;
     $seq =~ tr
-        {ACGTMRWSYKVHDBNacgtmrwsykvhdbn}
-        {TGCAKYWSRMBDHVNtgcakywsrmbdhvn};
+        {ACGTMRWSYKVHDBNacgtmrwsykvhdbn-}
+        {TGCAKYWSRMBDHVNtgcakywsrmbdhvn-};
 
     my $qual = $self->{qual};
     $qual = reverse $qual if (defined $qual);
@@ -286,7 +286,7 @@ sub _concat {
 sub _is_nucleic {
 
     my ($seq) = @_;
-    return $seq !~ /[^ACGTUMRWSYKVHDBN]/i;
+    return $seq !~ /[^ACGTUMRWSYKVHDBN-]/i;
 }
 
 
