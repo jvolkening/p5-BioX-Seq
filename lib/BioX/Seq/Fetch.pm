@@ -17,7 +17,7 @@ sub new {
 
     my $self = bless {fn => $fn}, $class;
 
-    open my $fh, '<', $fn or die "Error opening $fn for reading\n";
+    open my $fh, '<', $fn or die "Error opening $fn for reading: $!\n";
 
     # read magic bytes and reset filehandle
     my $old_layers = join '', map {":$_"} PerlIO::get_layers($fh);
@@ -54,7 +54,7 @@ sub _load_faidx {
         . " create an index (e.g. by 'samtools faidx')\n"
         if (! -e $fn_idx);
 
-    open my $in, '<', $fn_idx;
+    open my $in, '<', $fn_idx or die "Error opening index file: $!\n";
     while (my $line = <$in>) {
         chomp $line;
         my ($name, $len, $offset, $bases_per_line, $bytes_per_line)
