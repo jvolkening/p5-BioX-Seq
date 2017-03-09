@@ -45,14 +45,88 @@ sub new {
 
 }
 
+sub write_index {
+    
+    my ($self, $fn) = @_;
+
+    my $fn_idx  = $fn // $self->{fn} . '.fai';
+
+    if (-e $fn_idx) {
+        warn "Index file exists, won't overwrite\n";
+        return 0;
+    }
+
+    warn "Creating index at $fn_idx\n";
+    open my $idx, '>', $fn_idx or die "Error opening $fn_idx for writing: $!\n";
+
+    my $fh = $self->{fh};
+
+    my $curr_id;
+    my $curr_len;
+    my $curr_bases;
+    my $curr_bytes;
+    my $curr_offset;
+    my $bl_mismatch = 0;
+    my $ll_mismatch = 0;
+    while (my $line =  <$fh>) {
+        if ($line =~ /^>(\S+)/) {
+            if (defined $curr_id) {
+                say {$idx} join "\t",
+                    $curr_id,
+                    $curr_len,
+                    $curr_offset,
+                    $curr_bases,
+                    $curr_bytes,
+                ;
+            }
+            $curr_id = $1;
+            $curr_offset = tell $fh;
+            $curr_len = 0;
+            $curr_bases = undef;
+            $curr_bytes = undef;
+            $bl_mismatch = 0;
+            $ll_mismatch = 0;
+        }
+        elsif ($line =~ /^[A-Za-z\-]+(\r?\n?)$/) {
+            die "Base length mismatch\n" if ($bl_mismatch);
+            die "Line length mismatch\n" if ($ll_mismatch);
+            my $ll  = length $line;
+            my $bl  = $ll - length $1;
+            $curr_len += $bl;
+            $curr_bases //= $bl;
+            $curr_bytes //= $ll;
+            $bl_mismatch = 1 if ($bl != $curr_bases);
+            $ll_mismatch = 1 if ($ll != $curr_bytes);
+        }
+        elsif ($line =~ /\S/) {
+            die "Unexpected content: $line";
+        }
+                
+    }
+
+    # write remaining index
+    if (defined $curr_id) {
+        say {$idx} join "\t",
+            $curr_id,
+            $curr_len,
+            $curr_offset,
+            $curr_bases,
+            $curr_bytes,
+        ;
+    }
+
+    close $idx;
+    return 1;
+
+}
+     
+
 sub _load_faidx {
     
     my ($self) = @_;
 
     my $fn_idx  = $self->{fn} . '.fai';
-    die "ERROR: No index file found (expected $fn_idx). Perhaps you need to"
-        . " create an index (e.g. by 'samtools faidx')\n"
-        if (! -e $fn_idx);
+    $self->write_index if (! -e $fn_idx);
 
     open my $in, '<', $fn_idx or die "Error opening index file: $!\n";
     while (my $line = <$in>) {
