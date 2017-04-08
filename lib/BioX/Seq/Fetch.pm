@@ -249,11 +249,19 @@ another compatible method are supported.
 
 =item B<new> I<FILENAME>
 
-    my $parser = BioX::Seq::Fetch->new($filename);
+    my $parser = BioX::Seq::Fetch->new(
+        $filename,
+        with_descriptions => 1,
+    );
 
 Create a new C<BioX::Seq::Fetch> parser. Requires an input filename (STDIN or
 open filehandles are not supported, as a filename is needed to find the
-corresponding index file and to ensure than C<seek()>-ing is supported.
+corresponding index file and to ensure than C<seek()>-ing is supported). Takes
+one optional boolean argument indicating whether to enable backtracking to
+find and include any sequence description present (normally this is absent as
+the FASTA index includes the offset to the sequence itself and not the
+defline). This option is currently experimental and may slow down sequence
+fetches, so it is turned off by default.
 
 =item B<fetch_seq> I<SEQID> [I<START> I<END>]
 
