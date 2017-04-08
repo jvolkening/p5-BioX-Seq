@@ -10,7 +10,7 @@ use constant MAGIC_GZIP => pack('C3', (0x1f, 0x8b, 0x08));
 
 sub new {
 
-    my ($class,$fn) = @_;
+    my ($class,$fn,%args) = @_;
 
     die "Can't find or read input filename"
         if (! defined $fn || ! -e $fn);
@@ -36,6 +36,8 @@ sub new {
         close $fh;
         $fh = Compress::BGZF::Reader->new_filehandle($fn);
     }
+
+    $self->{with_description} = 1 if ($args{with_description});
 
     $self->{fh} = $fh;
 
@@ -181,7 +183,35 @@ sub fetch_seq {
 
     my $desc;
     if ($start_bp > 1 || $end_bp < $len) {
-        $desc = " ($start_bp-$end_bp)";
+        $desc = "($start_bp-$end_bp)";
+    }
+
+    # backtrack to find defline, if asked
+    if ($self->{with_description}) {
+
+        my $string = '';
+        my $p = $off;
+        my $chr;
+
+        BACK:
+        while ($p > 0) {
+            --$p;
+            seek $fh, $p, 0;
+            read($fh, $chr, 1)
+                or die "Error during backtrack read: $@\n";
+            last BACK if $chr eq '>';
+            $string = $chr . $string;
+        }
+
+        die "Backtracking inexplicably failed\n"
+            if (! CORE::length $string);
+        if ($string =~ /^(\S+)(?:\s+(.*))?$/) {
+            my $nid  = $1;
+            $desc = join ' ', grep {defined $_} $2, $desc;
+            die "ID mismatch ($id vs $nid)!\n"
+                if ($nid ne $id);
+        }
+        
     }
 
     return BioX::Seq->new($seq, $id, $desc);
