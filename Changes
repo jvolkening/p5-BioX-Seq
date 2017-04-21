@@ -1,5 +1,8 @@
 Revision history for BioX-Seq
 
+0.005   2017-04-20
+        Auto-indexing of FASTA files for BioX::Seq::Fetch
+
 0.004   2016-11-18
         Fixed handling of cross-platform line endings
 
