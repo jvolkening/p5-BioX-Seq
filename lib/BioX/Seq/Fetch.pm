@@ -129,6 +129,7 @@ sub _load_faidx {
 
     my $fn_idx  = $self->{fn} . '.fai';
     $self->write_index if (! -e $fn_idx);
+    my @ids;
 
     open my $in, '<', $fn_idx or die "Error opening index file: $!\n";
     while (my $line = <$in>) {
@@ -139,8 +140,10 @@ sub _load_faidx {
             if ( defined $self->{idx}->{$name} );
         my $eol = $bytes_per_line - $bases_per_line;
         $self->{idx}->{$name} = [$len, $offset, $bases_per_line, $eol];
+        push @ids, $name;
     }
     close $in;
+    $self->{ids} = \@ids;
 
     return;
 
@@ -149,7 +152,7 @@ sub _load_faidx {
 sub ids {
 
     my ($self) = @_;
-    return keys %{ $self->{idx} };
+    return @{ $self->{ids} };
 
 }
 

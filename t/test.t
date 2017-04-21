@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 
+use File::Compare;
 use Test::More;
 use FindBin;
 use BioX::Seq;
@@ -10,6 +11,16 @@ use BioX::Seq::Stream;
 use BioX::Seq::Fetch;
 
 chdir $FindBin::Bin;
+
+my $test_fa  = 'test_data/test.fa';
+my $test_fq  = 'test_data/test.fq';
+my $test_gz  = 'test_data/test2.fa.gz';
+my $test_cmp = 'test_data/test2.fa.gz.fai.cmp';
+my $test_fai = 'test_data/test2.fa.gz.fai';
+
+my @tmp_files = (
+    $test_fai,
+);
 
 my $obj = BioX::Seq->new;
 
@@ -40,7 +51,7 @@ my $fa = $obj->as_fasta(4);
 ok ($fa eq ">test_seq testing it\nTTTG\nAAAC\nTT\n", "as FASTA");
 
 
-my $parser = BioX::Seq::Stream->new('test.fa');
+my $parser = BioX::Seq::Stream->new($test_fa);
 
 ok ($parser->isa('BioX::Seq::Stream::FASTA'), "returned BioX::Seq::Stream::FASTA object");
 
@@ -63,7 +74,7 @@ ok ($seq->seq eq 'WWFWWFWWFWWFWWFWWFWWFWWFWWF', "invalid translate");
 my $invalid = $seq->translate();
 ok (! defined $invalid, "invalid translate undef");
 
-open my $in, '<', 'test.fq';
+open my $in, '<', $test_fq;
 $parser = BioX::Seq::Stream->new($in);
 
 ok ($parser->isa('BioX::Seq::Stream::FASTQ'), "returned BioX::Seq::Stream::FASTQ object");
@@ -84,7 +95,8 @@ eval {
 };
 ok ($seq->seq eq 'ATTGAGAATGACCGATAAACT', "seq unchanged");
 
-$parser = BioX::Seq::Fetch->new('test2.fa.gz');
+$parser = BioX::Seq::Fetch->new($test_gz);
+ok(! compare($test_fai, $test_cmp), "Compare indices" );
 
 $seq = $parser->fetch_seq('Test1|someseq', 28 => 33);
 ok( $seq->seq eq 'TAGGAT', "fetch seq match 1" );
@@ -94,6 +106,14 @@ ok( $seq->seq eq 'W', "fetch seq match 2" );
 
 $seq = $parser->fetch_seq('Test3/yetanother');
 ok( $seq->seq eq 'GTTAGAGCCAGGAACGAGAACGA', "fetch seq match 3" );
+
+my @ids = $parser->ids;
+ok( scalar(@ids) == 4, "ID count" );
+ok( $ids[1] eq 'Test1|another', "ID comparison" );
+my $l = $parser->length($ids[2]);
+ok( $parser->length($ids[2]) == 23, "length comparison" );
+
+unlink $_ for (@tmp_files);
 
 done_testing();
 exit;
