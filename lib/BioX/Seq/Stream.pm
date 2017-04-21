@@ -172,35 +172,34 @@ have never seen a FASTQ file like this either, but apparently this is
 technically valid and a few software programs will still create files like
 this.
 
-=head1 METHODS
+=head1 CONSTRUCTOR
 
-=over 4
-
-=item B<new>
-
-=item B<new> I<FILENAME>
-
-=item B<new> I<FILEHANDLE>
+=head2 new
 
     my $parser = BioX::Seq::Stream->new();
+    my $parser = BioX::Seq::Stream->new( $filename );
+    my $parser = BioX::Seq::Stream->new( $filehandle );
 
 Create a new C<BioX::Seq::Stream> parser. If no arguments are given (or if the
 argument given has an undefined value), the parser will read from STDIN.
 Otherwise, the parser will determine whether a filename or a filehandle is
 provided and act accordingly. Returns a C<BioX::Seq::Stream> parser object.
 
-=item B<next_seq>
+=head1 METHODS
 
-    my $seq = $parser->next_seq();
+=head2 next_seq
+
+    while (my $seq = $parser->next_seq()) {
+        # do something
+    }
 
 Reads the next sequence from the filehandle. Returns a C<BioX::Seq> object, or
 I<undef> if the end of the file is reached.
 
-The first time this is called, the parser will try to determined whether the
-input is FASTA or FASTQ based on the first character in the file - should
-always be ">" for FASTA and "@" for FASTQ.
-
-=back
+The first time this is called, the parser will try to automatically determine
+the file format and throw an exception if detection fails. In practice this
+should seldom or never happen, as the supported file formats can be reliable
+distinguished based on the first few bytes of the file.
 
 =head1 DECOMPRESSION
 

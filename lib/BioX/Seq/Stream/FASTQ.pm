@@ -81,3 +81,46 @@ sub next_seq {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+BioX::Seq::Stream::FASTQ - the FASTQ parser for C<BioX::Seq:Stream>;
+
+=head1 DESCRIPTION
+
+This module performs robust parsing of FASTQ sequence streams. It is not
+intended to be used directly but is called by C<BioX::Seq::Stream> after file
+format autodetection. Please see the documentation for that module for more
+details.
+
+=head1 CAVEATS AND BUGS
+
+Please report any bugs or feature requests to the issue tracker
+at L<https://github.com/jvolkening/p5-BioX-Seq>.
+
+=head1 AUTHOR
+
+Jeremy Volkening <jeremy *at* base2bio.com>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2014-2017 Jeremy Volkening
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along with
+this program.  If not, see <http://www.gnu.org/licenses/>.
+
+=cut
+
+

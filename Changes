@@ -1,5 +1,12 @@
 Revision history for BioX-Seq
 
+0.006   2017-04-21
+        Major documentation updates
+        Fixed bug in build_ORF_regex() causing problems after multiple calls
+            with different arguments
+        Increased coverage of testing suite
+        Increased coverage of POD
+
 0.005   2017-04-20
         Auto-indexing of FASTA files for BioX::Seq::Fetch
 

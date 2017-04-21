@@ -1,6 +1,8 @@
 BioX::Seq
 =========
 
+[![Build Status](https://travis-ci.org/jvolkening/p5-BioX-Seq.svg?branch=master)](https://travis-ci.org/jvolkening/p5-BioX-Seq)
+
 BioX::Seq is a simple sequence class that can be used to represent
 biological sequences. It was designed as a compromise between using simple
 strings and hashes to hold sequences and using the rather bloated objects of
@@ -18,10 +20,10 @@ INSTALLATION
 
 To install this module, run the following commands:
 
-	perl Makefile.PL
-	make
-	make test
-	make install
+	perl Build.PL
+	./Build
+	./Build test
+	./Build install
 
 SUPPORT AND DOCUMENTATION
 -------------------------
