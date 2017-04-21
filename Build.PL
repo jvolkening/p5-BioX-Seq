@@ -16,6 +16,11 @@ my $builder = Module::Build->new(
     },
     requires => {
         'Compress::BGZF' => 0,
+        'File::Which'    => 0,
+        'Scalar::Util'   => 0,
+        'POSIX'          => 0,
+        'Cwd'            => 0,
+        'File::Basename' => 0,
     },
     meta_merge => {
         resources => {

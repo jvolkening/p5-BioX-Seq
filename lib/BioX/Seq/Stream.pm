@@ -5,12 +5,11 @@ use strict;
 use warnings;
 
 use File::Which;
-use Scalar::Util qw/openhandle/;
+use Scalar::Util qw/blessed openhandle/;
 use BioX::Seq;
 use POSIX qw/ceil/;
 use Cwd qw/abs_path/;
 use File::Basename qw/fileparse/;
-use Scalar::Util qw/blessed/;
 
 # define or search for binary locations
 # if these are not available
