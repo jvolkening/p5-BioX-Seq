@@ -70,18 +70,12 @@ sub new {
                         or die "Error opening bzip2 stream: $!\n";
                 }
             }
-            # don't check for testing coverage because DSRC will rarely be
-            # installed
-            # uncoverable branch true
             elsif (substr($magic,0,2) eq MAGIC_DSRC) {
                 die "no dsrc backend found\n" if (! defined $DSRC_BIN);
                 close $fh;
                 open $fh, '-|', "$DSRC_BIN d -s $fn"
                     or die "Error opening dsrc stream: $!\n";
             }
-            # don't check for testing coverage because FQZC will rarely be
-            # installed
-            # uncoverable branch true
             elsif (substr($magic,0,4) eq MAGIC_FQZC) {
                 die "no fqz backend found\n" if (! defined $FQZC_BIN);
                 close $fh;
