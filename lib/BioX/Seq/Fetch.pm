@@ -116,16 +116,6 @@ sub write_index {
                 
     }
 
-    if ($bl_mismatch) {
-        close $idx;
-        unlink $fn_idx;
-        die "Base length mismatch\n";
-    }
-    if ($ll_mismatch) {
-        close $idx;
-        unlink $fn_idx;
-        die "Line length mismatch\n";
-    }
     # write remaining index
     if (defined $curr_id) {
         say {$idx} join "\t",
