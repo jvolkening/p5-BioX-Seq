@@ -1,5 +1,9 @@
 Revision history for BioX-Seq
 
+0.006004 2017-11-05
+         Fixed memory leak caused by unnecessary binmode() and repeated
+             BioX::Seq::Stream::new()
+
 0.006003 2017-07-04
          Remove index file if failure during write
 
