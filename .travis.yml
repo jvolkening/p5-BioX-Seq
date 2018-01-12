@@ -10,7 +10,7 @@ before_install:
   - eval $(curl https://travis-perl.github.io/init) --auto
 deploy:
   provider: script
-  script: $TRAVIS_BUILD_DIR/deploy.sh
+  script: ./Build deploy
   skip_cleanup: true
   on:
     branch: master

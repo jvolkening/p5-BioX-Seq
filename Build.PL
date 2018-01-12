@@ -4,7 +4,27 @@ use strict;
 use warnings;
 use Module::Build;
 
-my $builder = Module::Build->new(
+my $deployer = Module::Build->subclass(
+      class => 'Module::Build::Deploy',
+      code => <<'SUBCLASS' );
+sub ACTION_deploy {
+
+    use CPAN::Upload::Tiny;
+    my $self = shift;
+    $self->depends_on("dist");
+
+    my $tarball = $self->dist_dir() . '.tar.gz';
+    die "tarball not found"
+        if (! -e $tarball);
+    print "Uploading $tarball\n";
+    my $upload = CPAN::Upload::Tiny->new(
+        $ENV{PAUSE_USER}, $ENV{PAUSE_PASS}
+    );
+    $upload->upload_file( $tarball );
+}
+SUBCLASS
+
+my $builder = $deployer->new(
     module_name        => 'BioX::Seq',
     license            => 'GPL_3',
     dist_author        => q{Jeremy Volkening <jdv@base2bio.com>},
