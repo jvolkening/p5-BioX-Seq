@@ -9,7 +9,7 @@ my $deployer = Module::Build->subclass(
       code => <<'SUBCLASS' );
 sub ACTION_deploy {
 
-    use CPAN::Upload::Tiny;
+    use CPAN::Uploader;
     my $self = shift;
     $self->depends_on("dist");
 
@@ -17,10 +17,10 @@ sub ACTION_deploy {
     die "tarball not found"
         if (! -e $tarball);
     print "Uploading $tarball\n";
-    my $upload = CPAN::Upload::Tiny->new(
-        $ENV{PAUSE_USER}, $ENV{PAUSE_PASS}
-    );
-    $upload->upload_file( $tarball );
+    CPAN::Uploader->upload_file( $tarball, {
+        user     => $ENV{PAUSE_USER},
+        password => $ENV{PAUSE_PASS},
+    } );
 }
 SUBCLASS
 

@@ -8,12 +8,12 @@ matrix:
 sudo: false             # faster builds as long as you don't need sudo access
 before_install:
   - eval $(curl https://travis-perl.github.io/init) --auto
-  - cpanm CPAN::Upload::Tiny
+  - cpanm -v CPAN::Uploader
 deploy:
   provider: script
   script: ./Build deploy
   skip_cleanup: true
   on:
     branch: master
-    #tags: true
+    tags: true
     perl: 5.24
