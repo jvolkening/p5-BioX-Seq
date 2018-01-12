@@ -14,6 +14,6 @@ deploy:
   script: ./Build deploy
   skip_cleanup: true
   on:
-    #branch: master
+    branch: deploy_tests
     #tags: true
     perl: 5.24
