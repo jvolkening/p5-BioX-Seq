@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/bash
 
 echo "Checking for existing build files..."
 if [ -f "Build" ]
