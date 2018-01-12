@@ -80,7 +80,7 @@
 ^MANIFEST\.SKIP
 
 # Avoid archives of this distribution
-\bBioX-Seq-[\d\.\_]+
 
 \bdev
 ^\.
+\bdeploy.sh
