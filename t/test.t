@@ -13,14 +13,16 @@ use BioX::Seq::Utils qw/rev_com is_nucleic all_orfs build_ORF_regex/;
 
 chdir $FindBin::Bin;
 
-my $test_fa       = 'test_data/test.fa';
-my $test_fq       = 'test_data/test.fq.bz2';
-my $test_gz       = 'test_data/test2.fa.gz';
-my $test_zst      = 'test_data/test2.fa.zst';
-my $test_fai      = 'test_data/test2.fa.gz.fai';
-my $test_fai_cmp  = 'test_data/test2.fa.gz.fai.cmp';
-my $test_2bit     = 'test_data/test3.2bit';
-my $test_orfs     = 'test_data/test4.fa';
+my $test_fa      = 'test_data/test.fa';
+my $test_fq      = 'test_data/test.fq.bz2';
+my $test_gz      = 'test_data/test2.fa.gz';
+my $test_zst     = 'test_data/test2.fa.zst';
+my $test_fai     = 'test_data/test2.fa.gz.fai';
+my $test_fai_cmp = 'test_data/test2.fa.gz.fai.cmp';
+my $test_2bit    = 'test_data/test3.2bit';
+my $test_orfs    = 'test_data/test4.fa';
+my $test_dsrc    = 'test_data/test2.fq.dsrc';
+my $test_fqz     = 'test_data/test2.fq.fqz';
 
 my @tmp_files = (
     $test_fai,
@@ -163,6 +165,43 @@ for (1..3) {
 ok( $seq->seq eq 'ATTAGggagNNnTAGGC', "read 2bit seq" );
 ok( $seq->id eq 'seq_03', "read 2bit id" );
 
+#----------------------------------------------------------------------------#
+# dsrc testing
+#----------------------------------------------------------------------------#
+
+$parser = BioX::Seq::Stream->new($test_dsrc);
+
+ok ($parser->isa('BioX::Seq::Stream::FASTQ'), "returned BioX::Seq::Stream::FASTQ object");
+
+$seq = $parser->next_seq;
+ok ($seq->isa('BioX::Seq'), "returned BioX::Seq object");
+ok ($seq->seq eq 'ATTGAGGGGATTGAGATAGGGTGGAGTANNNTGGAT', "read seq");
+ok ($seq->id eq 'Test1', "read id");
+ok ($seq->desc eq 'some description here', "read desc");
+ok ($seq->qual eq '4332292992919292929222919192!!!92211', "read qual");
+
+$seq = $parser->next_seq;
+ok ($seq->seq eq 'ATTGAGAATGACCGATAAACT', "read 2nd seq");
+ok ($seq->qual eq '@11944491019494440111', "read 2nd qual");
+
+#----------------------------------------------------------------------------#
+# fzqcomp testing
+#----------------------------------------------------------------------------#
+
+$parser = BioX::Seq::Stream->new($test_fqz);
+
+ok ($parser->isa('BioX::Seq::Stream::FASTQ'), "returned BioX::Seq::Stream::FASTQ object");
+
+$seq = $parser->next_seq;
+ok ($seq->isa('BioX::Seq'), "returned BioX::Seq object");
+ok ($seq->seq eq 'ATTGAGGGGATTGAGATAGGGTGGAGTANNNTGGAT', "read seq");
+ok ($seq->id eq 'Test1', "read id");
+ok ($seq->desc eq 'some description here', "read desc");
+ok ($seq->qual eq '4332292992919292929222919192!!!92211', "read qual");
+
+$seq = $parser->next_seq;
+ok ($seq->seq eq 'ATTGAGAATGACCGATAAACT', "read 2nd seq");
+ok ($seq->qual eq '@11944491019494440111', "read 2nd qual");
 
 #----------------------------------------------------------------------------#
 # Fetch testing
