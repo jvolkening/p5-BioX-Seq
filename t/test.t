@@ -16,6 +16,7 @@ chdir $FindBin::Bin;
 my $test_fa       = 'test_data/test.fa';
 my $test_fq       = 'test_data/test.fq.bz2';
 my $test_gz       = 'test_data/test2.fa.gz';
+my $test_zst      = 'test_data/test2.fa.zst';
 my $test_fai      = 'test_data/test2.fa.gz.fai';
 my $test_fai_cmp  = 'test_data/test2.fa.gz.fai.cmp';
 my $test_2bit     = 'test_data/test3.2bit';
@@ -105,6 +106,21 @@ ok ($seq->seq eq 'AATGCAAGTACGTAAGACTTATAGCAGTAGGATGGAATGATAGCCATAG', "read seq 
 ok ($seq->desc eq 'This is a test of the emergency broadcast system', "read desc");
 ok (! defined $seq->qual, "undefined qual");
 
+#----------------------------------------------------------------------------#
+# zstd testing
+#----------------------------------------------------------------------------#
+
+$parser = BioX::Seq::Stream->new($test_zst);
+
+ok ($parser->isa('BioX::Seq::Stream::FASTA'), "returned BioX::Seq::Stream::FASTA object");
+
+$seq = $parser->next_seq;
+ok ($seq->isa('BioX::Seq'), "returned BioX::Seq object");
+
+ok ($seq->id eq 'Test1|someseq', "read seq ID");
+ok ($seq->seq eq 'AATGCAAGTACGTAAGACTTATAGCAGTAGGATGGAATGATAGCCATAG', "read seq ");
+ok ($seq->desc eq 'This is a test of the emergency broadcast system', "read desc");
+ok (! defined $seq->qual, "undefined qual");
 
 #----------------------------------------------------------------------------#
 # FASTQ / bzip2 testing

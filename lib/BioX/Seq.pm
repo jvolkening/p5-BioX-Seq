@@ -1,4 +1,4 @@
-package BioX::Seq 0.006007;
+package BioX::Seq 0.007;
 
 use 5.012;
 use strict;
@@ -336,9 +336,10 @@ C<BioX::Seq> is a simple sequence class that can be used to represent
 biological sequences. It was designed as a compromise between using simple
 strings and hashes to hold sequences and using the rather bloated objects of
 Bioperl. Features (or, depending on your viewpoint, bugs) include
-auto-stringification and context-dependent transformations. It is meant
-be used primarily as the return object of the C<BioX::Seq::Fastx> parser, but
-there may be occasions where it is useful in its own right.
+auto-stringification and context-dependent transformations. It is meant be
+used primarily as the return object of the C<BioX::Seq::Stream> and
+C<BioX::Seq::Fetch> parsers, but there may be occasions where it is useful in
+its own right.
 
 C<BioX::Seq> current implements a small subset of the transformations most
 commonly used by the author (reverse complement, translate, subrange) - more
