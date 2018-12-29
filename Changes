@@ -1,5 +1,8 @@
 Revision history for BioX-Seq
 
+0.007 2018-12-28
+         Added support for streaming zstd-compressed files
+
 0.006007 2018-06-19
          Removed CPAN::Uploader as hard dependency
 
