@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use File::Compare;
+use File::Which;
 use Test::More;
 use FindBin;
 use BioX::Seq;
@@ -111,18 +112,21 @@ ok (! defined $seq->qual, "undefined qual");
 #----------------------------------------------------------------------------#
 # zstd testing
 #----------------------------------------------------------------------------#
+if (which( 'zstd') ) {
 
-$parser = BioX::Seq::Stream->new($test_zst);
+    $parser = BioX::Seq::Stream->new($test_zst);
 
-ok ($parser->isa('BioX::Seq::Stream::FASTA'), "returned BioX::Seq::Stream::FASTA object");
+    ok ($parser->isa('BioX::Seq::Stream::FASTA'), "returned BioX::Seq::Stream::FASTA object");
 
-$seq = $parser->next_seq;
-ok ($seq->isa('BioX::Seq'), "returned BioX::Seq object");
+    $seq = $parser->next_seq;
+    ok ($seq->isa('BioX::Seq'), "returned BioX::Seq object");
 
-ok ($seq->id eq 'Test1|someseq', "read seq ID");
-ok ($seq->seq eq 'AATGCAAGTACGTAAGACTTATAGCAGTAGGATGGAATGATAGCCATAG', "read seq ");
-ok ($seq->desc eq 'This is a test of the emergency broadcast system', "read desc");
-ok (! defined $seq->qual, "undefined qual");
+    ok ($seq->id eq 'Test1|someseq', "read seq ID");
+    ok ($seq->seq eq 'AATGCAAGTACGTAAGACTTATAGCAGTAGGATGGAATGATAGCCATAG', "read seq ");
+    ok ($seq->desc eq 'This is a test of the emergency broadcast system', "read desc");
+    ok (! defined $seq->qual, "undefined qual");
+
+}
 
 #----------------------------------------------------------------------------#
 # FASTQ / bzip2 testing
@@ -169,39 +173,47 @@ ok( $seq->id eq 'seq_03', "read 2bit id" );
 # dsrc testing
 #----------------------------------------------------------------------------#
 
-$parser = BioX::Seq::Stream->new($test_dsrc);
+if ( which('dsrc') ) {
 
-ok ($parser->isa('BioX::Seq::Stream::FASTQ'), "returned BioX::Seq::Stream::FASTQ object");
+    $parser = BioX::Seq::Stream->new($test_dsrc);
 
-$seq = $parser->next_seq;
-ok ($seq->isa('BioX::Seq'), "returned BioX::Seq object");
-ok ($seq->seq eq 'ATTGAGGGGATTGAGATAGGGTGGAGTANNNTGGAT', "read seq");
-ok ($seq->id eq 'Test1', "read id");
-ok ($seq->desc eq 'some description here', "read desc");
-ok ($seq->qual eq '4332292992919292929222919192!!!92211', "read qual");
+    ok ($parser->isa('BioX::Seq::Stream::FASTQ'), "returned BioX::Seq::Stream::FASTQ object");
 
-$seq = $parser->next_seq;
-ok ($seq->seq eq 'ATTGAGAATGACCGATAAACT', "read 2nd seq");
-ok ($seq->qual eq '@11944491019494440111', "read 2nd qual");
+    $seq = $parser->next_seq;
+    ok ($seq->isa('BioX::Seq'), "returned BioX::Seq object");
+    ok ($seq->seq eq 'ATTGAGGGGATTGAGATAGGGTGGAGTANNNTGGAT', "read seq");
+    ok ($seq->id eq 'Test1', "read id");
+    ok ($seq->desc eq 'some description here', "read desc");
+    ok ($seq->qual eq '4332292992919292929222919192!!!92211', "read qual");
+
+    $seq = $parser->next_seq;
+    ok ($seq->seq eq 'ATTGAGAATGACCGATAAACT', "read 2nd seq");
+    ok ($seq->qual eq '@11944491019494440111', "read 2nd qual");
+
+}
 
 #----------------------------------------------------------------------------#
 # fzqcomp testing
 #----------------------------------------------------------------------------#
 
-$parser = BioX::Seq::Stream->new($test_fqz);
+if ( which('fqz_comp') ) {
 
-ok ($parser->isa('BioX::Seq::Stream::FASTQ'), "returned BioX::Seq::Stream::FASTQ object");
+    $parser = BioX::Seq::Stream->new($test_fqz);
 
-$seq = $parser->next_seq;
-ok ($seq->isa('BioX::Seq'), "returned BioX::Seq object");
-ok ($seq->seq eq 'ATTGAGGGGATTGAGATAGGGTGGAGTANNNTGGAT', "read seq");
-ok ($seq->id eq 'Test1', "read id");
-ok ($seq->desc eq 'some description here', "read desc");
-ok ($seq->qual eq '4332292992919292929222919192!!!92211', "read qual");
+    ok ($parser->isa('BioX::Seq::Stream::FASTQ'), "returned BioX::Seq::Stream::FASTQ object");
 
-$seq = $parser->next_seq;
-ok ($seq->seq eq 'ATTGAGAATGACCGATAAACT', "read 2nd seq");
-ok ($seq->qual eq '@11944491019494440111', "read 2nd qual");
+    $seq = $parser->next_seq;
+    ok ($seq->isa('BioX::Seq'), "returned BioX::Seq object");
+    ok ($seq->seq eq 'ATTGAGGGGATTGAGATAGGGTGGAGTANNNTGGAT', "read seq");
+    ok ($seq->id eq 'Test1', "read id");
+    ok ($seq->desc eq 'some description here', "read desc");
+    ok ($seq->qual eq '4332292992919292929222919192!!!92211', "read qual");
+
+    $seq = $parser->next_seq;
+    ok ($seq->seq eq 'ATTGAGAATGACCGATAAACT', "read 2nd seq");
+    ok ($seq->qual eq '@11944491019494440111', "read 2nd qual");
+
+}
 
 #----------------------------------------------------------------------------#
 # Fetch testing

@@ -1,5 +1,8 @@
 Revision history for BioX-Seq
 
+0.007001 2019-01-10
+         Skip advanced compression tests if binaries are missing
+
 0.007 2018-12-28
          Added support for streaming zstd-compressed files
 
