@@ -1,6 +1,7 @@
 Revision history for BioX-Seq
 
 0.007002 2019-01-10
+         Write FASTA index files in raw mode for consistency on all platforms
          Expanded test coverage
 
 0.007001 2019-01-10
