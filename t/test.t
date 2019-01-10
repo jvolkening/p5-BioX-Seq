@@ -6,6 +6,7 @@ use warnings;
 use File::Compare;
 use File::Which;
 use Test::More;
+use Test::Exception;
 use FindBin;
 use BioX::Seq;
 use BioX::Seq::Stream;
@@ -38,30 +39,62 @@ my $obj = BioX::Seq->new;
 
 ok ($obj->isa('BioX::Seq'), "returned BioX::Seq object");
 
+$obj->seq = undef;
+ok ("$obj" eq '', "empty object stringify");
+
+$obj->seq( 'AAGE' );
+ok ( ! defined $obj->rev_com , 'bad rev_com');
 $obj->seq( 'AAGT' );
 $obj .= 'TTCAAA';
 $obj->rev_com();
 ok ("$obj" eq 'TTTGAAACTT', "concat and rc");
 
+ok( ! defined $obj->as_fasta, "print FASTA missing ID" );
+
+throws_ok { $obj->translate(-1) } qr/not a valid frame/, 'frame too low';
+throws_ok { $obj->translate(6) } qr/not a valid frame/, 'frame too high';
 my $tr = $obj->translate(5);
 ok ($obj->seq() eq 'TTTGAAACTT', "context transform");
 ok ($tr->seq() eq 'VS', "translater");
 
-my $fq = $obj->as_fastq;
-ok (! $fq, "missing ID");
+ok (! defined $obj->as_fastq, "print FASTQ missing ID");
 $obj->id('test_seq');
+ok ($obj->as_fasta eq ">test_seq\nTTTGAAACTT\n", "as FASTA no desc");
 
 my $sub = $obj->rev_com->range(3,10);
 ok ("$sub" eq 'GTTTCAAA', "range");
 $sub = $obj->rev_com->range(3,11);
 ok (! defined $sub, "out of range");
 
-$fq = $obj->rev_com->as_fastq(21);
+throws_ok { $obj->as_fastq } qr/undefined quality/, 'undefined quality check';
+my $fq = $obj->rev_com->as_fastq(21);
 ok ($fq eq "\@test_seq\nAAGTTTCAAA\n+\n6666666666\n", "as FASTQ");
-$obj->desc("testing it");
-my $fa = $obj->as_fasta(4);
-ok ($fa eq ">test_seq testing it\nTTTG\nAAAC\nTT\n", "as FASTA");
 
+$obj->qual = 'TOOSHORT';
+throws_ok { $obj->as_fastq } qr/length mismatch/, 'length mismatch check';
+$obj->qual( 'A'. 'C' x (length($obj)-1) );
+$obj->desc("testing it");
+ok ($obj->rev_com->as_fastq eq "\@test_seq testing it\nAAGTTTCAAA\n+\nCCCCCCCCCA\n", "as FASTQ 2");
+$sub = $obj->range(0,1);
+ok (! defined $sub, "out of range 2");
+$sub = $obj->range(2,3);
+ok ($sub->qual eq 'CC', "range quality");
+
+my $fa = $obj->as_fasta(4);
+ok ($fa eq ">test_seq testing it\nTTTG\nAAAC\nTT\n", "as FASTA short lines");
+
+$obj->seq( 'AATGYTAAT' );
+$obj->translate;
+ok ($obj->seq() eq 'NXN', "in-place translate");
+
+
+# check new sequence with bad quality
+throws_ok { $obj = BioX::Seq->new(
+    'ATGC',
+    'foo',
+    'bar',
+    'CCC'
+) } qr/length mismatch/, 'new() length mismatch check';
 
 #----------------------------------------------------------------------------#
 # FASTA testing
@@ -270,7 +303,7 @@ $seq = $parser->next_seq();
 my $orf = $parser->next_seq();
 my @orfs = all_orfs(
     $seq,
-    2,
+    3,
     300,
 );
 ok( scalar(@orfs) == 4, "check ORF count" );
@@ -285,6 +318,9 @@ ok( $orfs[1]->[2] == 1371, "check ORF stop" );
 );
 
 ok( scalar(@orfs) == 5, "check ORF count 2" );
+
+throws_ok { all_orfs($seq) } qr/Missing mode/, "missing mode";
+throws_ok { all_orfs($seq, 0) } qr/Missing min/, "missing minimum length";
 
 #----------------------------------------------------------------------------#
 # Finish up
