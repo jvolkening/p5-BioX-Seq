@@ -1,5 +1,8 @@
 Revision history for BioX-Seq
 
+0.007002 2019-01-10
+         Expanded test coverage
+
 0.007001 2019-01-10
          Skip advanced compression tests if binaries are missing
 
