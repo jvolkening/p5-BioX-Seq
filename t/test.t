@@ -70,7 +70,7 @@ throws_ok { $obj->as_fastq } qr/undefined quality/, 'undefined quality check';
 my $fq = $obj->rev_com->as_fastq(21);
 ok ($fq eq "\@test_seq\nAAGTTTCAAA\n+\n6666666666\n", "as FASTQ");
 
-$obj->qual = 'TOOSHORT';
+$obj->qual('TOOSHORT');
 throws_ok { $obj->as_fastq } qr/length mismatch/, 'length mismatch check';
 $obj->qual( 'A'. 'C' x (length($obj)-1) );
 $obj->desc("testing it");
