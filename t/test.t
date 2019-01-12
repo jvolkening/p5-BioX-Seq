@@ -35,6 +35,7 @@ my $test_duplicates = 'test_data/test_duplicate_ids.fa';
 my $test_oneline_fa = 'test_data/test_one_line.fa';
 my $test_oneline_fq = 'test_data/test_one_line.fq';
 my $test_badheader  = 'test_data/test_bad_header.fa';
+my $test_large      = 'test_data/large.fa.gz';
 
 my @tmp_files = (
     $test_fai,
@@ -157,6 +158,18 @@ throws_ok { BioX::Seq::Stream->new($test_oneline_fq) } qr/detect line endings/,
 $parser = BioX::Seq::Stream->new($test_badheader);
 throws_ok { while ($parser->next_seq) {} } qr/record invalid/,
     "bad FASTA header";
+
+# test a real-world file
+$parser = BioX::Seq::Stream->new($test_large);
+my $n = 0;
+my $t = 0;
+while (my $seq = $parser->next_seq) {
+    ++$n;
+    $t += length $seq;
+}
+ok ($n == 50, "correct sequence count");
+ok ($t == 19379, "correct sequence lengths");
+
 
 #----------------------------------------------------------------------------#
 # gzip testing

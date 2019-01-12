@@ -21,6 +21,7 @@ t/test.t
 t/test_data/foobar.txt
 t/test_data/not_bgzip.fa.gz
 t/test_data/one_byte.fa
+t/test_data/large.fa.gz
 t/test_data/test.fa
 t/test_data/test.fq.bz2
 t/test_data/test2.fa
