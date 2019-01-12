@@ -170,6 +170,16 @@ while (my $seq = $parser->next_seq) {
 ok ($n == 50, "correct sequence count");
 ok ($t == 19379, "correct sequence lengths");
 
+# test a real-world file in 'fast' mode
+$parser = BioX::Seq::Stream->new($test_large, fast => 1);
+$n = 0;
+$t = 0;
+while (my $seq = $parser->next_seq) {
+    ++$n;
+    $t += length $seq;
+}
+ok ($n == 50, "correct sequence count");
+ok ($t == 19379, "correct sequence lengths");
 
 #----------------------------------------------------------------------------#
 # gzip testing

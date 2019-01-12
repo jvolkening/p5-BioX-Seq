@@ -35,7 +35,7 @@ sub new {
 
     # 'fast' mode turns off parser sanity-checking in places
     if ($args{fast}) {
-        $self->{fast} = 1;
+        $self->fast( $args{fast} );
     }
 
     if (defined $fn) {
