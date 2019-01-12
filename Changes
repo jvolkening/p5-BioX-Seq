@@ -1,8 +1,7 @@
 Revision history for BioX-Seq
 
 0.007004 2019-01-11
-         Validate FASTA records after parsing
-         Strip FASTA whitespace
+         Validate each FASTA sequence after parsing (can be turned off)
          Much additional testing
 
 0.007003 2019-01-11

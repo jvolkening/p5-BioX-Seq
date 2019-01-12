@@ -29,9 +29,14 @@ use constant MAGIC_ZSTD => pack('C4', 0x28, 0xB5, 0x2F, 0xFD);
 
 sub new {
 
-    my ($class,$fn) = @_;
+    my ($class,$fn, %args) = @_;
 
     my $self = bless {} => $class;
+
+    # 'fast' mode turns off parser sanity-checking in places
+    if ($args{fast}) {
+        $self->{fast} = 1;
+    }
 
     if (defined $fn) {
 
@@ -116,6 +121,13 @@ sub new {
 
 }
 
+sub fast {
+
+    my ($self, $bool) = @_;
+    $self->{fast} = $bool // 1;
+
+}
+
 sub _guess_format {
 
     my ($self) = @_;
@@ -189,11 +201,29 @@ this.
     my $parser = BioX::Seq::Stream->new();
     my $parser = BioX::Seq::Stream->new( $filename );
     my $parser = BioX::Seq::Stream->new( $filehandle );
+    my $parser = BioX::Seq::Stream->new( $filename, %args );
 
 Create a new C<BioX::Seq::Stream> parser. If no arguments are given (or if the
-argument given has an undefined value), the parser will read from STDIN.
+first argument given has an undefined value), the parser will read from STDIN.
 Otherwise, the parser will determine whether a filename or a filehandle is
 provided and act accordingly. Returns a C<BioX::Seq::Stream> parser object.
+
+The first argument is always a filename or filehandle. Subsequent key/value
+arguments can include:
+
+=over 4
+
+=item fast
+
+    my $parser = BioX::Seq::Stream->new( $filename, fast => 1 );
+
+In version 0.007004, a check was added during FASTA parsing which validated
+each sequence string. Previously, no validation had been performed for the
+sake of speed. The new check, while safer, results in somewhat slower parsing.
+It can be explictly turned off by setting this parameter to a true value. This
+can also be toggled explictly using the \C<fast()> method described below.
+
+=back
 
 =head1 METHODS
 
@@ -210,6 +240,16 @@ The first time this is called, the parser will try to automatically determine
 the file format and throw an exception if detection fails. In practice this
 should seldom or never happen, as the supported file formats can be reliable
 distinguished based on the first few bytes of the file.
+
+=head2 fast
+
+    $parser->fast(1);
+    $parser->fast(); # same as $parser->fast(1);
+    $parser->fast(0);
+
+Sets/unsets 'fast' mode. If a true valid is given (or no value at all),
+certain validation steps during parsing are disabled for the sake of speed, as
+described above under CONSTRUCTOR.
 
 =head1 DECOMPRESSION
 
