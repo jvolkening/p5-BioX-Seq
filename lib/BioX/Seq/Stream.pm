@@ -58,7 +58,7 @@ sub new {
                     $fh = IO::Uncompress::Gunzip->new($fn, MultiStream => 1);
                 }
                 else {
-                    open  $fh, '-|', "$GZIP_BIN -dc $fn"
+                    open $fh, '-|', "$GZIP_BIN -dc $fn"
                         or die "Error opening gzip stream: $!\n";
                 }
             }
@@ -123,7 +123,7 @@ sub _guess_format {
     # Filetype guessing must be based on first two bytes (or less)
     # which are stored in an object buffer
     my $r = (read $self->{fh}, $self->{buffer}, 2);
-    die "failed to read intial bytes" if ($r != 2);
+    die "failed to read initial bytes" if ($r != 2);
 
     my $search_path = abs_path(__FILE__);
     $search_path =~ s/\.pm$//i;
@@ -138,6 +138,7 @@ sub _guess_format {
     }
 
     die "Failed to guess filetype\n"   if (scalar(@matched) < 1);
+    # uncoverable branch true
     die "Multiple filetypes matched\n" if (scalar(@matched) > 1);
 
     eval "require $matched[0]";

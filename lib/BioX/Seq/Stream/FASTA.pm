@@ -69,6 +69,15 @@ sub next_seq {
 
             $self->{next_id}   = $1;
             $self->{next_desc} = $2;
+
+            # remove whitespace
+            $seq =~ s/\s//g;
+            # allow any alpha character or characters possibly representing
+            # gaps or stop codons
+            if ($seq =~ /[^A-Za-z\-\.\*]/) {
+                die "Previous sequence record invalid\n";
+            }
+
             return BioX::Seq->new($seq, $id, $desc);
 
         }
@@ -84,6 +93,15 @@ sub next_seq {
     if (defined $self->{next_id}) {
         delete $self->{next_id};
         delete $self->{next_desc};
+
+        # remove whitespace
+        $seq =~ s/\s//g;
+        # allow any alpha character or characters possibly representing
+        # gaps or stop codons
+        if ($seq =~ /[^A-Za-z\-\.\*]/) {
+            die "Previous sequence record invalid\n";
+        }
+
         return BioX::Seq->new($seq, $id, $desc);
     }
     return undef;
