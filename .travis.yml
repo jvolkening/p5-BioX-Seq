@@ -3,14 +3,16 @@ matrix:
   include:
     - perl: 5.24
       env: COVERAGE=1   # enables coverage+coveralls reporting
+      after_success:
+      - cover -test -report coveralls
     - perl: 5.12
       env: COVERAGE=0 
 sudo: false             # faster builds as long as you don't need sudo access
 before_install:
-  - eval $(curl https://travis-perl.github.io/init) --auto
-  - cpanm -v CPAN::Uploader
-  - cpanm -v Devel::Cover
-  - cpanm -v Compress::BGZF
+  - cpanm --notest CPAN::Uploader
+  - cpanm --notest Devel::Cover
+  - cpanm --notest Compress::BGZF
+  - cpanm --notest Devel::Cover::Report::Coveralls
 install:
   - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
       wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
