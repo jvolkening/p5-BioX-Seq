@@ -1,12 +1,13 @@
-package BioX::Seq 0.007004;
+package BioX::Seq 0.008;
 
 use 5.012;
 use strict;
 use warnings;
 
 use overload
-    '""' => \&_stringify,
-    '.=' => \&_concat;
+    '""'   => \&_stringify,
+    '.='   => \&_concat,
+    'bool' => sub{return(1)};
 
 my %genetic_code = (
     
