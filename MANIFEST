@@ -9,6 +9,7 @@ lib/BioX/Seq/Stream/TwoBit.pm
 lib/BioX/Seq/Utils.pm
 LICENSE
 MANIFEST			This list of files
+MANIFEST.SKIP		This list of files
 META.json
 META.yml
 README.md

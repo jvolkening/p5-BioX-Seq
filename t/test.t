@@ -21,6 +21,7 @@ my $test_fq         = 'test_data/test.fq.bz2';
 my $test_gz         = 'test_data/test2.fa.gz';
 my $test_zst        = 'test_data/test2.fa.zst';
 my $test_fai        = 'test_data/test2.fa.gz.fai';
+my $test_fai_expl   = 'test_data/foo.fai';
 my $test_fai_cmp    = 'test_data/test2.fa.gz.fai.cmp';
 my $test_2bit       = 'test_data/test3.2bit';
 my $test_orfs       = 'test_data/test4.fa';
@@ -39,6 +40,9 @@ my $test_large      = 'test_data/large.fa.gz';
 
 my @tmp_files = (
     $test_fai,
+    $test_fai_expl,
+    "$test_duplicates.fai",
+    "$test2_fa.fai",
 );
 
 
@@ -348,8 +352,8 @@ if ( which('fqz_comp') ) {
 
 $parser = BioX::Seq::Fetch->new($test_gz, with_description => 0);
 ok(! compare($test_fai, $test_fai_cmp), "Compare indices" );
-$parser->write_index('foo.fai');
-ok(! compare('foo.fai', $test_fai_cmp), "Compare indices 2" );
+$parser->write_index($test_fai_expl);
+ok(! compare($test_fai_expl, $test_fai_cmp), "Compare indices 2" );
 
 $seq = $parser->fetch_seq('Prot1', 1 => 1);
 ok( $seq->seq eq 'W', "fetch seq match 2" );
