@@ -21,7 +21,9 @@ INSTALLATION
 ------------
 
 To install this module, run the following commands:
-
+    
+    git clone https://github.com/jvolkening/p5-BioX-Seq.git
+    cd p5-BioX-Seq
 	perl Build.PL
 	./Build
 	./Build test
