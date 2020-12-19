@@ -264,7 +264,7 @@ found):
 
   * BZIP2
 
-  * DSRC v2
+  * DSRC v2 (released versions buggy, currently not under testing!!)
 
   * FQZCOMP
 

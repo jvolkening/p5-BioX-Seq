@@ -304,7 +304,10 @@ ok( $seq->id eq 'seq_03', "read 2bit id" );
 # dsrc testing
 #----------------------------------------------------------------------------#
 
-if ( which('dsrc') ) {
+# 2020-12-19: Testing of DSRC has been disabled since there is not currently a
+# stable DSRC release (building the latest from GitHub master is *somewhat*
+# stable)
+if (0 &&  which('dsrc') ) {
 
     $parser = BioX::Seq::Stream->new($test_dsrc);
 
