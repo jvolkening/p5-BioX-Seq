@@ -219,7 +219,7 @@ throws_ok { BioX::Seq::Stream->new('nonexistent_file') } qr/Error opening/, "bad
 
 # simulate when 'gzip' binary is bad
 $BioX::Seq::Stream::GZIP_BIN = 'nonexistent';
-throws_ok { BioX::Seq::Stream->new($test_gz) } qr/Error opening/, "bad gzip binary";
+throws_ok { BioX::Seq::Stream->new($test_gz) } qr/[Error opening|not recognized]/, "bad gzip binary";
 $BioX::Seq::Stream::GZIP_BIN = $gzip_bin_tmp;
 
 #----------------------------------------------------------------------------#
@@ -281,7 +281,7 @@ $BioX::Seq::Stream::BZIP_BIN = $bzip2_bin_tmp;
 
 # simulate when 'bzip2' binary is bad
 $BioX::Seq::Stream::BZIP_BIN = 'nonexistent';
-throws_ok { BioX::Seq::Stream->new($test_fq) } qr/Error opening/, "bad bzip2 binary";
+throws_ok { BioX::Seq::Stream->new($test_fq) } qr/[Error opening|not recognized]/, "bad bzip2 binary";
 $BioX::Seq::Stream::BZIP_BIN = $bzip2_bin_tmp;
 
 #----------------------------------------------------------------------------#
@@ -446,25 +446,25 @@ throws_ok { BioX::Seq::Stream->new($test_foobar) } qr/Failed to guess/, "non-seq
 # simulate missing zstd
 my $zstd_bin_tmp = $BioX::Seq::Stream::ZSTD_BIN;
 $BioX::Seq::Stream::ZSTD_BIN = undef;
-throws_ok { BioX::Seq::Stream->new($test_zst) } qr/no zstd/, "Missing zstd";
+throws_ok { BioX::Seq::Stream->new($test_zst) } qr/no zstd/, "missing zstd";
 $BioX::Seq::Stream::ZSTD_BIN = 'nonexistent';
-throws_ok { BioX::Seq::Stream->new($test_zst) } qr/Error opening/, "Missing zstd";
+throws_ok { BioX::Seq::Stream->new($test_zst) } qr/[Error opening|not recognized]/, "bad zstd binary";
 $BioX::Seq::Stream::ZSTD_BIN = $zstd_bin_tmp;
 
 # simulate missing dsrc
 my $dsrc_bin_tmp = $BioX::Seq::Stream::DSRC_BIN;
 $BioX::Seq::Stream::DSRC_BIN = undef;
-throws_ok { BioX::Seq::Stream->new($test_dsrc) } qr/no dsrc/, "Missing dsrc";
+throws_ok { BioX::Seq::Stream->new($test_dsrc) } qr/no dsrc/, "missing dsrc";
 $BioX::Seq::Stream::DSRC_BIN = 'nonexistent';
-throws_ok { BioX::Seq::Stream->new($test_dsrc) } qr/Error opening/, "Missing dsrc";
+throws_ok { BioX::Seq::Stream->new($test_dsrc) } qr/[Error opening|not recognized]/, "bad dsrc binary";
 $BioX::Seq::Stream::DSRC_BIN = $dsrc_bin_tmp;
 
 # simulate missing fqzc
 my $fqzc_bin_tmp = $BioX::Seq::Stream::FQZC_BIN;
 $BioX::Seq::Stream::FQZC_BIN = undef;
-throws_ok { BioX::Seq::Stream->new($test_fqz) } qr/no fqz/, "Missing fqz";
+throws_ok { BioX::Seq::Stream->new($test_fqz) } qr/no fqz/, "missing fqz";
 $BioX::Seq::Stream::FQZC_BIN = 'nonexistent bin';
-throws_ok { BioX::Seq::Stream->new($test_fqz) } qr/Error opening/, "Missing fqz";
+throws_ok { BioX::Seq::Stream->new($test_fqz) } qr/[Error opening|not recognized]/, "bad fqz binary";
 $BioX::Seq::Stream::FQZC_BIN = $fqzc_bin_tmp;
 
 #----------------------------------------------------------------------------#

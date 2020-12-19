@@ -1,5 +1,9 @@
 Revision history for BioX-Seq
 
+0.008001 2020-12-19
+         Bump minimum Perl version to 5.16 (older versions handle l-value
+         subroutines differently)
+
 0.008 2019-07-17
          Bio::Seq objects return true in boolean tests (even when the sequence
             is empty)

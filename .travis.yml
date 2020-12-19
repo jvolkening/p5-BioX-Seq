@@ -8,7 +8,7 @@ matrix:
       - cover -test -report coveralls
     - perl: 5.24
       env: COVERAGE=0 
-    - perl: 5.12
+    - perl: 5.16
       env: COVERAGE=0 
 sudo: false             # faster builds as long as you don't need sudo access
 before_install:
