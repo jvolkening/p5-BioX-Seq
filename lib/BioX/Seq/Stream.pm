@@ -4,7 +4,7 @@ use 5.012;
 use strict;
 use warnings;
 
-use File::Which;
+use IPC::Cmd qw/can_run/;
 use Scalar::Util qw/blessed openhandle/;
 use BioX::Seq;
 use POSIX qw/ceil/;
@@ -13,11 +13,11 @@ use File::Basename qw/fileparse/;
 
 # define or search for binary locations
 # if these are not available
-our $GZIP_BIN = which('pigz')   // which('gzip');
-our $BZIP_BIN = which('pbzip2') // which('bzip2');
-our $ZSTD_BIN = which('pzstd')  // which('zstd');
-our $DSRC_BIN = which('dsrc2')  // which('dsrc');
-our $FQZC_BIN = which('fqz_comp');
+our $GZIP_BIN = can_run('pigz')   // can_run('gzip');
+our $BZIP_BIN = can_run('pbzip2') // can_run('bzip2');
+our $ZSTD_BIN = can_run('pzstd')  // can_run('zstd');
+our $DSRC_BIN = can_run('dsrc2')  // can_run('dsrc');
+our $FQZC_BIN = can_run('fqz_comp');
 
 use constant MAGIC_GZIP => pack('C3', 0x1f, 0x8b, 0x08);
 use constant MAGIC_DSRC => pack('C2', 0xaa, 0x02);
@@ -256,7 +256,7 @@ described above under CONSTRUCTOR.
 If a filename is passed to the constructor, the module will read the first
 four bytes and match against known file compression magic bytes. If a
 compressed file is suspected, and a compatible decompression program can be
-found using L<File::Which>, a piped filehandle is opened for reading.
+found in the system path, a piped filehandle is opened for reading.
 Currently the following formats are supported (if appropriate binaries are
 found):
 

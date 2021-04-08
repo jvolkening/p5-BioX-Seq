@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use File::Compare;
-use File::Which;
+use IPC::Cmd qw/can_run/;
 use Test::More;
 use Test::Exception;
 use FindBin;
@@ -225,7 +225,7 @@ $BioX::Seq::Stream::GZIP_BIN = $gzip_bin_tmp;
 #----------------------------------------------------------------------------#
 # zstd testing
 #----------------------------------------------------------------------------#
-if (which( 'zstd') ) {
+if (can_run( 'zstd') ) {
 
     $parser = BioX::Seq::Stream->new($test_zst);
 
@@ -307,7 +307,7 @@ ok( $seq->id eq 'seq_03', "read 2bit id" );
 # 2020-12-19: Testing of DSRC has been disabled since there is not currently a
 # stable DSRC release (building the latest from GitHub master is *somewhat*
 # stable)
-if (0 &&  which('dsrc') ) {
+if (0 &&  can_run('dsrc') ) {
 
     $parser = BioX::Seq::Stream->new($test_dsrc);
 
@@ -330,7 +330,7 @@ if (0 &&  which('dsrc') ) {
 # fzqcomp testing
 #----------------------------------------------------------------------------#
 
-if ( which('fqz_comp') ) {
+if ( can_run('fqz_comp') ) {
 
     $parser = BioX::Seq::Stream->new($test_fqz);
 

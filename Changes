@@ -1,8 +1,12 @@
 Revision history for BioX-Seq
 
+0.008002 2021-04-08
+         Use core module IPC::Cmd instead of File::Which to look for installed
+            programs (removes last non-core dependency)
+
 0.008001 2020-12-19
          Bump minimum Perl version to 5.16 (older versions handle l-value
-         subroutines differently)
+            subroutines differently)
 
 0.008 2019-07-17
          Bio::Seq objects return true in boolean tests (even when the sequence
