@@ -1,5 +1,8 @@
 Revision history for BioX-Seq
 
+0.008004 2022-01-21
+         Add check for out-of-date faidx files
+
 0.008003 2021-11-04
          Added support for streaming xz-compressed files
 
