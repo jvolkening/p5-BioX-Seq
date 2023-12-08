@@ -15,6 +15,10 @@ jobs:
         perl-version:
           - '5.36'
           - '5.16'
+        include:
+          - perl-version: '5.36'
+            os: ubuntu-latest
+            coverage: true
 
     container:
       image: perldocker/perl-tester:${{ matrix.perl-version }}
@@ -27,4 +31,13 @@ jobs:
       - run: cpanm --notest --installdeps --verbose .
       - run: perl Build.PL
       - run: ./Build
-      - run: prove -wlvmb t
+      - name: Run Tests (no coverage)
+        if: ${{ !matrix.coverage }}
+        run: prove -wlvmb t
+      - name: Run Tests (with coverage)
+        if: ${{ matrix.coverage }}
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cpanm -n Devel::Cover::Report::Coveralls
+          cover -test -report Coveralls
