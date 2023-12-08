@@ -1,0 +1,29 @@
+name: 'Unit Tests'
+
+on:
+  push:
+    branches:
+      - master
+
+linux:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        perl-version:
+          - '5.36'
+          - '5.16'
+
+    container:
+      image: perldocker/perl-tester:${{ matrix.perl-version }}
+
+    steps:
+      - uses: actions/checkout@main
+        with:
+            submodules: recursive
+      - run: perl -V
+      - run: cpanm --notest --installdeps --verbose .
+      - run: perl Build.PL
+      - run: ./Build
+      - run: prove -wlvmb t
