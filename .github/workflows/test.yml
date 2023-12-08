@@ -5,7 +5,8 @@ on:
     branches:
       - master
 
-linux:
+jobs:
+  linux:
     runs-on: ubuntu-latest
 
     strategy:
