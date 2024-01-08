@@ -6,7 +6,8 @@ on:
       - master
 
 jobs:
-  linux:
+
+  test:
     runs-on: ubuntu-latest
 
     strategy:
@@ -41,3 +42,28 @@ jobs:
         run: |
           cpanm -n Devel::Cover::Report::Coveralls
           cover -test -report Coveralls
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    env:
+      PAUSE_USER: ${{ secrets.PAUSE_USER }}
+      PAUSE_PASS: ${{ secrets.PAUSE_PASS }}
+
+    strategy:
+      matrix:
+        perl-version:
+          - '5.36'
+
+    container:
+      image: perldocker/perl-tester:${{ matrix.perl-version }}
+
+    steps:
+      - uses: actions/checkout@main
+        with:
+            submodules: recursive
+      - run: perl -V
+      - run: cpanm --notest --installdeps --verbose .
+      - run: perl Build.PL
+      - run: ./Build
+      - run: ./Build deploy
