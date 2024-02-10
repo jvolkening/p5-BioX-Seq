@@ -64,6 +64,7 @@ jobs:
             submodules: recursive
       - run: perl -V
       - run: cpanm --notest --installdeps --verbose .
+      - run: cpanm MetaCPAN::Client
       - run: perl Build.PL
       - run: ./Build
       - run: ./Build deploy
