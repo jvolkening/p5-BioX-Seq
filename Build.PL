@@ -38,7 +38,7 @@ SUBCLASS
 
 my $builder = $deployer->new(
     module_name        => 'BioX::Seq',
-    license            => 'GPL_3',
+    license            => 'Perl_5',
     dist_author        => q{Jeremy Volkening <volkening@cpan.org>},
     configure_requires => {
         'Module::Build' => 0,
@@ -62,6 +62,5 @@ my $builder = $deployer->new(
         }
     },
     add_to_cleanup => [ 'BioX-Seq-*' ],
-    create_license => 1,
 );
 $builder->create_build_script;
