@@ -14,10 +14,11 @@ jobs:
       fail-fast: false
       matrix:
         perl-version:
+          - '5.44'
           - '5.36'
           - '5.16'
         include:
-          - perl-version: '5.36'
+          - perl-version: '5.44'
             os: ubuntu-latest
             coverage: true
 
@@ -53,7 +54,7 @@ jobs:
     strategy:
       matrix:
         perl-version:
-          - '5.36'
+          - '5.44'
 
     container:
       image: perldocker/perl-tester:${{ matrix.perl-version }}
