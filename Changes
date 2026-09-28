@@ -1,5 +1,8 @@
 Revision history for BioX-Seq
 
+0.008012 2026-09-28
+         Moved deps from build_requires to test_requires
+
 0.008011 2026-09-18
          Code clean-up per perlcritic
          Added missed file to clean up after testing
