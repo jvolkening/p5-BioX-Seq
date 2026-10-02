@@ -83,6 +83,12 @@ my $sub = $obj->rev_com->range(3,10);
 ok ("$sub" eq 'GTTTCAAA', "range");
 $sub = $obj->rev_com->range(3,11);
 ok (! defined $sub, "out of range");
+$sub = $obj->range(10, 2);
+ok (! defined $sub, "range start > end rejected");
+$sub = $obj->range(0, 3);
+ok (! defined $sub, "range start below 1 rejected");
+$sub = $obj->range(2, 0);
+ok (! defined $sub, "range end below 1 rejected");
 
 throws_ok { $obj->as_fastq } qr/undefined quality/, 'undefined quality check';
 my $fq = $obj->rev_com->as_fastq(21);
@@ -413,8 +419,16 @@ $seq = $parser->fetch_seq('Test1|someseq');
 ok( $seq->seq eq 'AATGCAAGTACGTAAGACTTATAGCAGTAGGATGGAATGATAGCCATAG', "fetch non-gz" );
 
 # out-of-bounds
-throws_ok { $seq = $parser->fetch_seq('Test1|someseq',-1,3) } qr/out of bounds/, "Fetch too low";
-throws_ok { $seq = $parser->fetch_seq('Test1|someseq',1,300) } qr/out of bounds/, "Fetch too high";
+throws_ok { $seq = $parser->fetch_seq('Test1|someseq',-1,3) }
+    qr/out of bounds/, "Fetch too low";
+throws_ok { $seq = $parser->fetch_seq('Test1|someseq',1,300) }
+    qr/out of bounds/, "Fetch too high";
+throws_ok { $seq = $parser->fetch_seq('Test1|someseq', 3, 1) }
+    qr/out of bounds/, "Fetch reversed coordinates";
+throws_ok { $seq = $parser->fetch_seq('Test1|someseq', 0, 5) }
+    qr/out of bounds/, "Fetch start below 1";
+throws_ok { $seq = $parser->fetch_seq('Test1|someseq', 1, 0) }
+    qr/out of bounds/, "Fetch end below 1";
 
 #misc error conditions
 throws_ok { BioX::Seq::Fetch->new(undef) } qr/Must define/, "Fetch undefined filename";
