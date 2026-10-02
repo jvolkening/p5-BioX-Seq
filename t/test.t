@@ -137,6 +137,8 @@ ok ($seq->seq eq 'AATGCAAGTACGTAAGACTTATAGCAGTAGGATGGAATGATAGCCATAG', "read seq 
 ok ($seq->desc eq 'This is a test of the emergency broadcast system', "read desc");
 ok (! defined $seq->qual, "undefined qual");
 ok ($seq->as_input eq ">Test1|someseq This is a test of the emergency broadcast system\nAATGCAAGTACGTAAGACTTATAGCAGTAGGATGGAATGATAGCCATAG\n", "as input FASTA");
+ok ($seq->as_input(20) eq ">Test1|someseq This is a test of the emergency broadcast system\nAATGCAAGTACGTAAGACTT\nATAGCAGTAGGATGGAATGA\nTAGCCATAG\n", "as input FASTA with line length");
+
 
 $seq = $parser->next_seq;
 ok ($seq->seq eq 'TTAGATTGATTTTTAGATAGGA', "read 2nd seq ");
@@ -265,6 +267,7 @@ ok ($seq->id eq 'Test1', "read id");
 ok ($seq->desc eq 'some description here', "read desc");
 ok ($seq->qual eq '433229299291929292922291919292292211', "read qual");
 ok ($seq->as_input eq "\@Test1 some description here\nATTGAGGGGATTGAGATAGGGTGGAGTANNNTGGAT\n+\n433229299291929292922291919292292211\n", "as input FASTQ");
+ok ($seq->as_input(32) eq "\@Test1 some description here\nATTGAGGGGATTGAGATAGGGTGGAGTANNNTGGAT\n+\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n", "as input FASTQ with quality");
 $seq = $parser->next_seq;
 ok ($seq->seq eq 'ATTGAGAATGACCGATAAACT', "read 2nd seq");
 ok ($seq->qual eq '@11944491019494440111', "read 2nd qual");

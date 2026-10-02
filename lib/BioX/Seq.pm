@@ -1,4 +1,4 @@
-package BioX::Seq 0.008013;
+package BioX::Seq 0.008014;
 
 use 5.016;
 use strict;
@@ -226,7 +226,7 @@ sub as_input {
     die "No input format found"
         if (! defined $self->{_input_format});
     my $method = 'as_' . $self->{_input_format};
-    $self->$method();
+    $self->$method($arg2);
 
 }
 
